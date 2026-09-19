@@ -1,6 +1,34 @@
 import { PrismaClient } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
 
-// Ensure DATABASE_URL fallback during build time if not defined in deployment environment
+// Handle Vercel serverless / read-only filesystem for SQLite
+if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.startsWith('file:')) {
+    const tmpDbPath = '/tmp/dev.db';
+    if (!fs.existsSync(tmpDbPath)) {
+      const candidates = [
+        path.join(process.cwd(), 'prisma', 'template.db'),
+        path.join(process.cwd(), 'template.db'),
+        path.join(process.cwd(), 'prisma', 'dev.db'),
+        path.join(process.cwd(), 'dev.db'),
+      ];
+      for (const p of candidates) {
+        if (fs.existsSync(p)) {
+          try {
+            fs.copyFileSync(p, tmpDbPath);
+            break;
+          } catch (e) {
+            console.error('Failed to copy template.db to /tmp:', e);
+          }
+        }
+      }
+    }
+    process.env.DATABASE_URL = `file:${tmpDbPath}`;
+  }
+}
+
+// Fallback for local development
 if (!process.env.DATABASE_URL) {
   process.env.DATABASE_URL = 'file:./dev.db';
 }

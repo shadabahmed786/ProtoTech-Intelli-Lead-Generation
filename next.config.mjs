@@ -5,6 +5,11 @@ if (!process.env.DATABASE_URL) {
 
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    outputFileTracingIncludes: {
+      '/api/**/*': ['./prisma/template.db', './prisma/schema.prisma'],
+    },
+  },
 };
 
 export default nextConfig;
