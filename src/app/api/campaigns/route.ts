@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { campaignRunner } from '@/lib/jobs/campaign-runner';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function GET() {
   try {
@@ -67,7 +67,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Run background worker asynchronously (does not block HTTP response)
+    // Lazy load background worker asynchronously
+    const { campaignRunner } = await import('@/lib/jobs/campaign-runner');
     campaignRunner.runCampaign(campaign.id).catch((err) => {
       console.error(`Background campaign ${campaign.id} failed:`, err);
     });

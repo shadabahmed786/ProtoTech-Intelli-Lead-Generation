@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
-import { campaignRunner } from '@/lib/jobs/campaign-runner';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+export async function GET() {
+  return NextResponse.json({
+    message: 'Campaign retry endpoint. Send POST request to retry.',
+  });
+}
 
 export async function POST(
   req: NextRequest,
@@ -27,6 +33,8 @@ export async function POST(
       },
     });
 
+    // Lazy load worker to prevent top-level module evaluation issues during build
+    const { campaignRunner } = await import('@/lib/jobs/campaign-runner');
     campaignRunner.runCampaign(campaign.id).catch((err) => {
       console.error(`Retry error for campaign ${campaign.id}:`, err);
     });

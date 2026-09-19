@@ -2,6 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const notes = await prisma.leadNote.findMany({
+      where: { leadId: params.id },
+      orderBy: { createdAt: 'desc' },
+    });
+    return NextResponse.json({ notes });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
 
 export async function POST(
   req: NextRequest,

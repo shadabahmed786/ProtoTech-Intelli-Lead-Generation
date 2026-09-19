@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/prisma';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+export async function GET() {
+  return NextResponse.json({
+    message: 'Lead suppression endpoint. Send POST request to suppress a lead.',
+  });
+}
 
 export async function POST(
   req: NextRequest,
