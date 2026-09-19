@@ -66,19 +66,13 @@ export default function Sidebar() {
       <div>
         <div className="p-6 pb-4 border-b border-border/60">
           <Link href="/" className="flex items-center gap-3 group">
-            {/* Hexagonal Cyan Icon */}
-            <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/40 flex items-center justify-center text-primary group-hover:bg-primary/20 group-hover:border-primary transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)]">
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="stroke-primary stroke-[2.5]"
-              >
-                <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" />
-                <path d="M12 7V17M12 7L8 11M12 7L16 11" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+            {/* ProtoTech Brand Logo */}
+            <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary/40 flex items-center justify-center bg-black/40 group-hover:border-primary transition-all shadow-[0_0_15px_rgba(0,229,255,0.25)] shrink-0">
+              <img
+                src="/logo.png"
+                alt="ProtoTech Solution"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+              />
             </div>
             <div>
               <div className="flex items-center gap-1">

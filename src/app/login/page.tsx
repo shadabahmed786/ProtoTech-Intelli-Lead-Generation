@@ -55,18 +55,12 @@ export default function LoginPage() {
       <div className="w-full max-w-md z-10 space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/40 text-primary shadow-[0_0_20px_rgba(0,229,255,0.25)] mb-2">
-            <svg
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="stroke-primary stroke-[2.5]"
-            >
-              <path d="M12 2L3 7V17L12 22L21 17V7L12 2Z" />
-              <path d="M12 7V17M12 7L8 11M12 7L16 11" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl overflow-hidden border border-primary/40 shadow-[0_0_25px_rgba(0,229,255,0.35)] mb-2 bg-black/40">
+            <img
+              src="/logo.png"
+              alt="ProtoTech Solution"
+              className="w-full h-full object-cover"
+            />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
             ProtoTech <span className="text-primary">Intelli</span>
