@@ -52,6 +52,18 @@ export default function LeadListsPage() {
     }
   };
 
+  const handleDeleteList = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this list?')) return;
+    try {
+      const res = await fetch(`/api/lists/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchLists();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn">
       <div>
@@ -112,9 +124,19 @@ export default function LeadListsPage() {
                     <p className="text-xs text-text-secondary mt-1">{l.description}</p>
                   )}
                 </div>
-                <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-primary/10 text-primary border border-primary/30">
-                  {l.items?.length || 0} Leads
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-primary/10 text-primary border border-primary/30">
+                    {l.items?.length || 0} Leads
+                  </span>
+                  <button
+                    onClick={() => handleDeleteList(l.id)}
+                    title="Delete list"
+                    aria-label="Delete list"
+                    className="p-1.5 rounded-lg text-text-secondary hover:text-[#FF4D6D] hover:bg-surface-raised transition-all"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
 
               {/* Sample leads in list */}

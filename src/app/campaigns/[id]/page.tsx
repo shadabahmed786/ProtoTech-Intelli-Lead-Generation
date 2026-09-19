@@ -36,6 +36,12 @@ export default function CampaignDetailPage() {
       if (res.ok) {
         const data = await res.json();
         setCampaign(data.campaign);
+        if (
+          data.campaign &&
+          !['Completed', 'Completed Partial', 'Cancelled', 'Failed'].includes(data.campaign.status)
+        ) {
+          fetch(`/api/campaigns/${campaignId}/process`, { method: 'POST' }).catch(() => {});
+        }
       }
     } catch (err) {
       console.error(err);

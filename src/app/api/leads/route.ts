@@ -25,7 +25,10 @@ export async function GET(req: NextRequest) {
     if (search) {
       where.OR = [
         { businessName: { contains: search } },
+        { website: { contains: search } },
+        { normalizedDomain: { contains: search } },
         { city: { contains: search } },
+        { address: { contains: search } },
         { category: { contains: search } },
         { email: { contains: search } },
         { phone: { contains: search } },

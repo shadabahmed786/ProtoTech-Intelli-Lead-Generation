@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Target, Plus, CheckCircle2, Sliders, Shield } from 'lucide-react';
+import { Target, Plus, CheckCircle2, Sliders, Shield, Trash2 } from 'lucide-react';
 
 export default function OfferProfilesPage() {
   const [profiles, setProfiles] = useState<any[]>([]);
@@ -25,6 +25,18 @@ export default function OfferProfilesPage() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteProfile = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this offer profile?')) return;
+    try {
+      const res = await fetch(`/api/offer-profiles/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchProfiles();
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -111,11 +123,21 @@ export default function OfferProfilesPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <h3 className="text-base font-bold text-text-primary">{p.name}</h3>
-                    {p.isDefault && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/10 text-primary border border-primary/30">
-                        Default Profile
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {p.isDefault ? (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-primary/10 text-primary border border-primary/30">
+                          Default Profile
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handleDeleteProfile(p.id)}
+                          title="Delete profile"
+                          className="p-1 rounded text-text-secondary hover:text-[#FF4D6D] transition-all"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                   {p.description && (
                     <p className="text-xs text-text-secondary">{p.description}</p>

@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Sparkles,
@@ -12,7 +12,7 @@ import {
   FileSpreadsheet,
   Target,
   Settings,
-  ShieldCheck,
+  LogOut,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -28,6 +28,37 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.user) {
+          setUser(data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {}
+    router.push('/login');
+    router.refresh();
+  };
+
+  const getInitials = (name?: string) => {
+    if (!name) return 'PT';
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase();
+  };
 
   return (
     <aside className="w-64 bg-surface border-r border-border flex flex-col justify-between h-screen sticky top-0 z-40 select-none">
@@ -91,21 +122,30 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* User / Workspace Footer */}
+      {/* User / Workspace Footer with Live Data & Logout */}
       <div className="p-4 border-t border-border/60">
         <div className="flex items-center justify-between p-2.5 rounded-xl bg-surface-raised border border-border">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary-dark to-primary flex items-center justify-center font-bold text-xs text-background">
-              JD
+          <div className="flex items-center gap-2.5 overflow-hidden">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary-dark to-primary flex items-center justify-center font-bold text-xs text-background shrink-0">
+              {getInitials(user?.name)}
             </div>
-            <div className="leading-tight">
-              <div className="text-xs font-semibold text-text-primary">John Doe</div>
-              <div className="text-[10px] text-text-secondary">Admin</div>
+            <div className="leading-tight truncate">
+              <div className="text-xs font-semibold text-text-primary truncate">
+                {user?.name || 'Administrator'}
+              </div>
+              <div className="text-[10px] text-text-secondary">
+                {user?.role || 'Admin'}
+              </div>
             </div>
           </div>
-          <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-secondary/15 text-secondary border border-secondary/30 rounded">
-            PRO
-          </span>
+          <button
+            onClick={handleLogout}
+            title="Sign out"
+            aria-label="Sign out"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-[#FF4D6D] hover:bg-surface transition-all shrink-0 ml-1"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </aside>

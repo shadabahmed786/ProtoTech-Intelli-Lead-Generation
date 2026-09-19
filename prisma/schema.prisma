@@ -11,9 +11,10 @@ model Profile {
   id        String   @id @default(uuid())
   email     String   @unique
   name      String
-  role      String   @default("Member") // Admin, Member, Viewer
-  avatarUrl String?
-  createdAt DateTime @default(now())
+  role         String   @default("Member") // Admin, Member, Viewer
+  avatarUrl    String?
+  passwordHash String?
+  createdAt    DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 

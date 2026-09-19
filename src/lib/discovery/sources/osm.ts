@@ -57,7 +57,7 @@ export class OpenMapSource implements LeadSource {
 
       const query = `
         [out:json][timeout:15];
-        area["name:en"="${cityName}"]["admin_level"]->.searchArea;
+        area[~"name|name:en"~"^${cityName}$",i]->.searchArea;
         (
           node${tag}(area.searchArea);
           way${tag}(area.searchArea);

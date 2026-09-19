@@ -79,11 +79,11 @@ export default function DashboardPage() {
           </div>
           <div className="mt-4">
             <div className="text-3xl font-bold text-text-primary">
-              {loading ? '...' : (stats?.totalLeads ?? 1248).toLocaleString()}
+              {loading ? '...' : (stats?.totalLeads ?? 0).toLocaleString()}
             </div>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-[#00C896] font-medium">
-              <span>+12%</span>
-              <span className="text-text-secondary text-[11px]">from last 7 days</span>
+              <span>+{stats?.trends?.leadsLast7Days ?? 0}</span>
+              <span className="text-text-secondary text-[11px]">in last 7 days</span>
             </div>
           </div>
         </div>
@@ -100,11 +100,11 @@ export default function DashboardPage() {
           </div>
           <div className="mt-4">
             <div className="text-3xl font-bold text-text-primary">
-              {loading ? '...' : (stats?.qualifiedLeads ?? 842).toLocaleString()}
+              {loading ? '...' : (stats?.qualifiedLeads ?? 0).toLocaleString()}
             </div>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-[#00C896] font-medium">
-              <span>+18%</span>
-              <span className="text-text-secondary text-[11px]">from last 7 days</span>
+              <span>+{stats?.trends?.qualifiedLast7Days ?? 0}</span>
+              <span className="text-text-secondary text-[11px]">in last 7 days</span>
             </div>
           </div>
         </div>
@@ -121,11 +121,11 @@ export default function DashboardPage() {
           </div>
           <div className="mt-4">
             <div className="text-3xl font-bold text-text-primary">
-              {loading ? '...' : (stats?.activeCampaigns ?? 12).toLocaleString()}
+              {loading ? '...' : (stats?.activeCampaigns ?? 0).toLocaleString()}
             </div>
-            <div className="flex items-center gap-1.5 mt-1 text-xs text-primary-dark font-medium">
-              <span>+2 new</span>
-              <span className="text-text-secondary text-[11px]">in progress</span>
+            <div className="flex items-center gap-1.5 mt-1 text-xs text-primary font-medium">
+              <span>{stats?.activeCampaigns ?? 0} running</span>
+              <span className="text-text-secondary text-[11px]">in background</span>
             </div>
           </div>
         </div>
@@ -142,11 +142,11 @@ export default function DashboardPage() {
           </div>
           <div className="mt-4">
             <div className="text-3xl font-bold text-text-primary">
-              {loading ? '...' : (stats?.highOpportunityLeads ?? 94).toLocaleString()}
+              {loading ? '...' : (stats?.highOpportunityLeads ?? 0).toLocaleString()}
             </div>
-            <div className="flex items-center gap-1.5 mt-1 text-xs text-[#00C896] font-medium">
-              <span>+23%</span>
-              <span className="text-text-secondary text-[11px]">from last 7 days</span>
+            <div className="flex items-center gap-1.5 mt-1 text-xs text-amber-400 font-medium">
+              <span>+{stats?.trends?.highOppLast7Days ?? 0}</span>
+              <span className="text-text-secondary text-[11px]">in last 7 days</span>
             </div>
           </div>
         </div>
@@ -257,25 +257,33 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {stats?.recentLeads?.map((lead: any) => (
-                    <tr key={lead.id} className="hover:bg-surface-hover transition-colors">
-                      <td className="px-4 py-3 font-medium text-text-primary">
-                        <Link href={`/leads/${lead.id}`} className="hover:text-primary flex items-center gap-2">
-                          <div className="w-6 h-6 rounded bg-primary/10 border border-primary/20 flex items-center justify-center text-[10px] text-primary">
-                            {lead.businessName.charAt(0)}
-                          </div>
-                          <span>{lead.businessName}</span>
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 text-text-secondary">{lead.city || 'Pakistan'}</td>
-                      <td className="px-4 py-3">
-                        <ScorePill score={lead.opportunityScore} />
-                      </td>
-                      <td className="px-4 py-3">
-                        <StatusBadge status={lead.status} />
+                  {stats?.recentLeads && stats.recentLeads.length > 0 ? (
+                    stats.recentLeads.map((lead: any) => (
+                      <tr key={lead.id} className="hover:bg-surface-hover transition-colors">
+                        <td className="px-4 py-3 font-medium text-text-primary">
+                          <Link href={`/leads/${lead.id}`} className="hover:text-primary flex items-center gap-2">
+                            <div className="w-6 h-6 rounded bg-primary/10 border border-primary/20 flex items-center justify-center text-[10px] text-primary">
+                              {lead.businessName.charAt(0)}
+                            </div>
+                            <span>{lead.businessName}</span>
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 text-text-secondary">{lead.city || 'Pakistan'}</td>
+                        <td className="px-4 py-3">
+                          <ScorePill score={lead.opportunityScore} />
+                        </td>
+                        <td className="px-4 py-3">
+                          <StatusBadge status={lead.status} />
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="p-8 text-center text-text-secondary text-xs">
+                        No leads discovered yet. Launch a campaign to start discovering live leads.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -292,60 +300,66 @@ export default function DashboardPage() {
           </div>
 
           <div className="space-y-3">
-            {stats?.recentCampaigns?.map((camp: any) => (
-              <div
-                key={camp.id}
-                className="p-4 rounded-xl bg-surface border border-border hover:border-primary/40 transition-all space-y-3"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <Link
-                      href={`/campaigns/${camp.id}`}
-                      className="font-bold text-sm text-text-primary hover:text-primary transition-colors line-clamp-1"
+            {stats?.recentCampaigns && stats.recentCampaigns.length > 0 ? (
+              stats.recentCampaigns.map((camp: any) => (
+                <div
+                  key={camp.id}
+                  className="p-4 rounded-xl bg-surface border border-border hover:border-primary/40 transition-all space-y-3"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <Link
+                        href={`/campaigns/${camp.id}`}
+                        className="font-bold text-sm text-text-primary hover:text-primary transition-colors line-clamp-1"
+                      >
+                        {camp.name}
+                      </Link>
+                      <div className="text-[11px] text-text-secondary mt-0.5">
+                        {camp.leadType} • {camp.location}
+                      </div>
+                    </div>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                        camp.status === 'Completed'
+                          ? 'bg-[#00C896]/10 text-[#00C896] border-[#00C896]/30'
+                          : camp.status === 'Completed Partial'
+                          ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
+                          : camp.status === 'Cancelled'
+                          ? 'bg-[#FF4D6D]/10 text-[#FF4D6D] border-[#FF4D6D]/30'
+                          : 'bg-primary/10 text-primary border-primary/30 animate-pulse'
+                      }`}
                     >
-                      {camp.name}
-                    </Link>
-                    <div className="text-[11px] text-text-secondary mt-0.5">
-                      {camp.leadType} • {camp.location}
+                      {camp.status}
+                    </span>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[11px] text-text-secondary">
+                      <span>{camp.currentStage}</span>
+                      <span>{camp.progressPercent}%</span>
+                    </div>
+                    <div className="w-full h-1.5 rounded-full bg-surface-raised overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-500"
+                        style={{ width: `${camp.progressPercent}%` }}
+                      />
                     </div>
                   </div>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
-                      camp.status === 'Completed'
-                        ? 'bg-[#00C896]/10 text-[#00C896] border-[#00C896]/30'
-                        : camp.status === 'Completed Partial'
-                        ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                        : camp.status === 'Cancelled'
-                        ? 'bg-[#FF4D6D]/10 text-[#FF4D6D] border-[#FF4D6D]/30'
-                        : 'bg-primary/10 text-primary border-primary/30 animate-pulse'
-                    }`}
-                  >
-                    {camp.status}
-                  </span>
-                </div>
 
-                {/* Progress bar */}
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[11px] text-text-secondary">
-                    <span>{camp.currentStage}</span>
-                    <span>{camp.progressPercent}%</span>
-                  </div>
-                  <div className="w-full h-1.5 rounded-full bg-surface-raised overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-primary to-primary-dark transition-all duration-500"
-                      style={{ width: `${camp.progressPercent}%` }}
-                    />
+                  {/* Counts */}
+                  <div className="flex items-center justify-between text-[11px] text-text-secondary pt-1 border-t border-border/50">
+                    <span>Req: {camp.quantityRequested}</span>
+                    <span className="text-primary font-semibold">Valid: {camp.finalLeadsCount}</span>
+                    <span>Dupes: {camp.duplicatesCount}</span>
                   </div>
                 </div>
-
-                {/* Counts */}
-                <div className="flex items-center justify-between text-[11px] text-text-secondary pt-1 border-t border-border/50">
-                  <span>Req: {camp.quantityRequested}</span>
-                  <span className="text-primary font-semibold">Valid: {camp.finalLeadsCount}</span>
-                  <span>Dupes: {camp.duplicatesCount}</span>
-                </div>
+              ))
+            ) : (
+              <div className="p-8 rounded-xl bg-surface border border-border text-center text-xs text-text-secondary">
+                No campaigns yet. Launch your first campaign to begin discovery.
               </div>
-            ))}
+            )}
           </div>
 
           {/* Pipeline Guarantee Callout */}

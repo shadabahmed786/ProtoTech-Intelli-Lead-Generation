@@ -17,6 +17,7 @@ import {
   CheckSquare,
   Square,
   Sparkles,
+  Folder,
 } from 'lucide-react';
 import StatusBadge from '@/components/StatusBadge';
 import ScorePill from '@/components/ScorePill';
@@ -35,9 +36,26 @@ export default function LeadsPage() {
   const [minScore, setMinScore] = useState('');
   const [hasWebsite, setHasWebsite] = useState('all');
 
-  // Selected for batch export
+  // Selected for batch export & list adding
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [exporting, setExporting] = useState(false);
+
+  // Lists state
+  const [lists, setLists] = useState<any[]>([]);
+  const [showListModal, setShowListModal] = useState(false);
+  const [selectedListId, setSelectedListId] = useState('');
+  const [addingToList, setAddingToList] = useState(false);
+  const [listMessage, setListMessage] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const sp = new URLSearchParams(window.location.search);
+      const q = sp.get('search') || sp.get('q');
+      if (q) {
+        setSearch(q);
+      }
+    }
+  }, []);
 
   const fetchLeads = async () => {
     setLoading(true);
@@ -118,6 +136,42 @@ export default function LeadsPage() {
     }
   };
 
+  const fetchLists = async () => {
+    try {
+      const res = await fetch('/api/lists');
+      if (res.ok) {
+        const data = await res.json();
+        setLists(data.lists || []);
+        if (data.lists?.length > 0) setSelectedListId(data.lists[0].id);
+      }
+    } catch {}
+  };
+
+  const handleAddBatchToList = async () => {
+    if (!selectedListId) return;
+    setAddingToList(true);
+    setListMessage('');
+    try {
+      for (const leadId of Array.from(selectedIds)) {
+        await fetch(`/api/lists/${selectedListId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ leadId }),
+        });
+      }
+      setListMessage(`Added ${selectedIds.size} leads to list!`);
+      setTimeout(() => {
+        setShowListModal(false);
+        setListMessage('');
+        setSelectedIds(new Set());
+      }, 1200);
+    } catch (e: any) {
+      setListMessage('Error: ' + e.message);
+    } finally {
+      setAddingToList(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Header */}
@@ -132,8 +186,20 @@ export default function LeadsPage() {
           </p>
         </div>
 
-        {/* Batch Export Button */}
+        {/* Batch Action Buttons */}
         <div className="flex items-center gap-3">
+          {selectedIds.size > 0 && (
+            <button
+              onClick={() => {
+                fetchLists();
+                setShowListModal(true);
+              }}
+              className="px-4 py-2 rounded-xl bg-surface-raised border border-border hover:border-primary/40 text-text-primary font-semibold text-xs transition-all flex items-center gap-2"
+            >
+              <ListPlus className="w-4 h-4 text-primary" />
+              <span>Add to List ({selectedIds.size})</span>
+            </button>
+          )}
           <button
             onClick={handleBatchExport}
             disabled={exporting}
@@ -399,6 +465,72 @@ export default function LeadsPage() {
           </div>
         </div>
       </div>
+
+      {/* Add Batch to List Modal */}
+      {showListModal && (
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-surface border border-border p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border/80 pb-3">
+              <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
+                <Folder className="w-4 h-4 text-primary" />
+                <span>Add {selectedIds.size} Leads to List</span>
+              </h3>
+              <button
+                onClick={() => setShowListModal(false)}
+                className="text-text-secondary hover:text-text-primary text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            {listMessage && (
+              <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/30 text-primary text-xs">
+                {listMessage}
+              </div>
+            )}
+
+            {lists.length === 0 ? (
+              <div className="text-center py-4 text-xs text-text-secondary">
+                No lists created yet.{' '}
+                <Link href="/lists" className="text-primary hover:underline">
+                  Create a list first
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <label className="text-xs font-semibold text-text-secondary">Select Target List:</label>
+                <select
+                  value={selectedListId}
+                  onChange={(e) => setSelectedListId(e.target.value)}
+                  className="w-full bg-surface-raised border border-border rounded-xl p-2.5 text-xs text-text-primary focus:border-primary focus:outline-none"
+                >
+                  {lists.map((l) => (
+                    <option key={l.id} value={l.id}>
+                      {l.name} ({l.items?.length || 0} leads)
+                    </option>
+                  ))}
+                </select>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    onClick={() => setShowListModal(false)}
+                    className="px-3 py-1.5 rounded-lg bg-surface-raised text-text-secondary hover:text-text-primary text-xs"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddBatchToList}
+                    disabled={addingToList}
+                    className="px-4 py-1.5 rounded-lg bg-primary text-background font-semibold text-xs hover:bg-primary-light transition-all disabled:opacity-50"
+                  >
+                    {addingToList ? 'Adding...' : `Add (${selectedIds.size})`}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

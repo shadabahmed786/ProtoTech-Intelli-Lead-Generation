@@ -1,34 +1,47 @@
 'use client';
 
-import React from 'react';
-import { Search, Bell, Shield, Database } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Bell, Shield, Cpu } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/leads?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <header className="h-16 border-b border-border bg-surface/80 backdrop-blur sticky top-0 z-30 px-6 flex items-center justify-between">
       {/* Search Input */}
-      <div className="relative w-80">
+      <form onSubmit={handleSearchSubmit} className="relative w-80">
         <Search className="w-4 h-4 text-text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search leads, domains, cities..."
           className="w-full bg-surface-raised border border-border rounded-lg pl-9 pr-4 py-1.5 text-xs text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
         />
-      </div>
+      </form>
 
       {/* Action Badges & Notifications */}
       <div className="flex items-center gap-4">
-        {/* Compliance / Zero-Paid-API badge */}
+        {/* Compliance / Free-First badge */}
         <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary/10 border border-secondary/25 text-[11px] text-secondary font-medium">
           <Shield className="w-3.5 h-3.5" />
-          <span>Free Public Sources Active</span>
+          <span>Public Verified Sources</span>
         </div>
 
-        {/* Database Mode indicator */}
+        {/* Engine status indicator */}
         <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-surface-raised border border-border text-[11px] text-text-secondary">
-          <Database className="w-3.5 h-3.5 text-primary" />
-          <span>Local Engine (Zero Cost)</span>
+          <Cpu className="w-3.5 h-3.5 text-primary" />
+          <span>Production Intelligence Engine</span>
         </div>
 
         {/* Notification Bell */}

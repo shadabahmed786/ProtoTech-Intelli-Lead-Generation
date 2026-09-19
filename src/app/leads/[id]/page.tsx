@@ -22,6 +22,8 @@ import {
   Ban,
   Send,
   MessageSquare,
+  ListPlus,
+  Folder,
 } from 'lucide-react';
 import StatusBadge from '@/components/StatusBadge';
 import ScorePill from '@/components/ScorePill';
@@ -37,8 +39,6 @@ const STATUS_OPTIONS = [
   'Suppressed',
 ];
 
-const TEAM_MEMBERS = ['Unassigned', 'John Doe', 'Shadab', 'Ali Khan', 'Fatima'];
-
 export default function LeadDetailPage() {
   const params = useParams();
   const leadId = params.id as string;
@@ -50,6 +50,15 @@ export default function LeadDetailPage() {
   const [noteContent, setNoteContent] = useState('');
   const [submittingNote, setSubmittingNote] = useState(false);
   const [suppressing, setSuppressing] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<string[]>(['Unassigned']);
+  const [currentUser, setCurrentUser] = useState<string>('Admin');
+
+  // Lists state
+  const [lists, setLists] = useState<any[]>([]);
+  const [showListModal, setShowListModal] = useState(false);
+  const [selectedListId, setSelectedListId] = useState('');
+  const [addingToList, setAddingToList] = useState(false);
+  const [listMessage, setListMessage] = useState('');
 
   const fetchLead = async () => {
     try {
@@ -67,8 +76,44 @@ export default function LeadDetailPage() {
     }
   };
 
+  const fetchTeamMembers = async () => {
+    try {
+      const res = await fetch('/api/users');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.users) {
+          const names = ['Unassigned', ...data.users.map((u: any) => u.name)];
+          setTeamMembers(Array.from(new Set(names)));
+        }
+      }
+    } catch {}
+  };
+
+  const fetchCurrentUser = async () => {
+    try {
+      const res = await fetch('/api/auth/me');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.user?.name) setCurrentUser(data.user.name);
+      }
+    } catch {}
+  };
+
+  const fetchLists = async () => {
+    try {
+      const res = await fetch('/api/lists');
+      if (res.ok) {
+        const data = await res.json();
+        setLists(data.lists || []);
+        if (data.lists?.length > 0) setSelectedListId(data.lists[0].id);
+      }
+    } catch {}
+  };
+
   useEffect(() => {
     fetchLead();
+    fetchTeamMembers();
+    fetchCurrentUser();
   }, [leadId]);
 
   const handleStatusChange = async (newStatus: string) => {
@@ -108,7 +153,7 @@ export default function LeadDetailPage() {
       const res = await fetch(`/api/leads/${leadId}/notes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: noteContent, authorName: 'John Doe' }),
+        body: JSON.stringify({ content: noteContent, authorName: currentUser || 'Admin' }),
       });
       if (res.ok) {
         setNoteContent('');
@@ -116,6 +161,30 @@ export default function LeadDetailPage() {
       }
     } finally {
       setSubmittingNote(false);
+    }
+  };
+
+  const handleAddToList = async () => {
+    if (!selectedListId) return;
+    setAddingToList(true);
+    setListMessage('');
+    try {
+      const res = await fetch(`/api/lists/${selectedListId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ leadId }),
+      });
+      if (res.ok) {
+        setListMessage('Added to list successfully!');
+        setTimeout(() => {
+          setShowListModal(false);
+          setListMessage('');
+        }, 1200);
+      }
+    } catch (e: any) {
+      setListMessage('Failed to add to list: ' + e.message);
+    } finally {
+      setAddingToList(false);
     }
   };
 
@@ -199,13 +268,25 @@ export default function LeadDetailPage() {
                 onChange={(e) => handleAssignmentChange(e.target.value)}
                 className="bg-surface-raised border border-border rounded-lg px-2.5 py-1 text-xs text-text-primary focus:border-primary focus:outline-none"
               >
-                {TEAM_MEMBERS.map((m) => (
+                {teamMembers.map((m) => (
                   <option key={m} value={m}>
                     {m}
                   </option>
                 ))}
               </select>
             </div>
+
+            {/* Add to List Button */}
+            <button
+              onClick={() => {
+                fetchLists();
+                setShowListModal(true);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-surface-raised border border-border hover:border-primary/40 text-xs font-semibold text-text-primary flex items-center gap-1.5 transition-all"
+            >
+              <ListPlus className="w-3.5 h-3.5 text-primary" />
+              <span>Add to List</span>
+            </button>
 
             {/* Suppress Button */}
             <button
@@ -219,6 +300,72 @@ export default function LeadDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Add to List Modal */}
+      {showListModal && (
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-surface border border-border p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border/80 pb-3">
+              <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
+                <Folder className="w-4 h-4 text-primary" />
+                <span>Add to Lead List</span>
+              </h3>
+              <button
+                onClick={() => setShowListModal(false)}
+                className="text-text-secondary hover:text-text-primary text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            {listMessage && (
+              <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/30 text-primary text-xs">
+                {listMessage}
+              </div>
+            )}
+
+            {lists.length === 0 ? (
+              <div className="text-center py-4 text-xs text-text-secondary">
+                No lists created yet.{' '}
+                <Link href="/lists" className="text-primary hover:underline">
+                  Create a list first
+                </Link>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <label className="text-xs font-semibold text-text-secondary">Select List:</label>
+                <select
+                  value={selectedListId}
+                  onChange={(e) => setSelectedListId(e.target.value)}
+                  className="w-full bg-surface-raised border border-border rounded-xl p-2.5 text-xs text-text-primary focus:border-primary focus:outline-none"
+                >
+                  {lists.map((l) => (
+                    <option key={l.id} value={l.id}>
+                      {l.name} ({l.items?.length || 0} leads)
+                    </option>
+                  ))}
+                </select>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    onClick={() => setShowListModal(false)}
+                    className="px-3 py-1.5 rounded-lg bg-surface-raised text-text-secondary hover:text-text-primary text-xs"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddToList}
+                    disabled={addingToList}
+                    className="px-4 py-1.5 rounded-lg bg-primary text-background font-semibold text-xs hover:bg-primary-light transition-all disabled:opacity-50"
+                  >
+                    {addingToList ? 'Adding...' : 'Confirm'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Grid: 2 Columns */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
