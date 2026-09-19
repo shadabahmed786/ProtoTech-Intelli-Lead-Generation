@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
-    "test": "node --test"
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:switch:postgres": "node scripts/switch-db.js postgres",
+    "db:switch:sqlite": "node scripts/switch-db.js sqlite",
+    "test": "npx tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.21.1",
@@ -31,6 +35,7 @@
     "postcss": "^8.4.47",
     "prisma": "^5.21.1",
     "tailwindcss": "^3.4.14",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.3"
   }
 }

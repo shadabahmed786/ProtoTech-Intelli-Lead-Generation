@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  prototech-intelli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: prototech-intelli
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/dev.db
+    volumes:
+      - prototech-data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  prototech-data:
+    driver: local
