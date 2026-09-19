@@ -48,16 +48,16 @@ export default function DashboardPage() {
       {/* Top Banner Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
             Dashboard
           </h1>
-          <p className="text-sm text-text-secondary mt-1">
+          <p className="text-xs sm:text-sm text-text-secondary mt-1">
             Overview of your lead generation activity and evidence-based opportunities.
           </p>
         </div>
         <Link
           href="/generate"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-background font-semibold text-sm hover:bg-primary-light transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] self-start sm:self-auto"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-background font-bold text-xs sm:text-sm hover:bg-primary-light transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] min-h-[44px] w-full sm:w-auto shrink-0"
         >
           <Sparkles className="w-4 h-4" />
           <span>Generate New Leads</span>
@@ -66,19 +66,19 @@ export default function DashboardPage() {
       </div>
 
       {/* 4 Metric Cards (Matching Section 5 of design image) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Total Leads */}
-        <div className="p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-primary/40 transition-all">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-primary/40 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-text-secondary">
               Total Leads
             </span>
             <div className="p-2 rounded-lg bg-primary/10 text-primary border border-primary/20">
               <Users className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-4">
-            <div className="text-3xl font-bold text-text-primary">
+          <div className="mt-3 sm:mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-text-primary truncate">
               {loading ? '...' : (stats?.totalLeads ?? 0).toLocaleString()}
             </div>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-[#00C896] font-medium">
@@ -89,17 +89,17 @@ export default function DashboardPage() {
         </div>
 
         {/* Qualified Leads */}
-        <div className="p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-[#00C896]/40 transition-all">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-[#00C896]/40 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-text-secondary">
               Qualified Leads
             </span>
             <div className="p-2 rounded-lg bg-[#00C896]/10 text-[#00C896] border border-[#00C896]/20">
               <Target className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-4">
-            <div className="text-3xl font-bold text-text-primary">
+          <div className="mt-3 sm:mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-text-primary truncate">
               {loading ? '...' : (stats?.qualifiedLeads ?? 0).toLocaleString()}
             </div>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-[#00C896] font-medium">
@@ -110,17 +110,17 @@ export default function DashboardPage() {
         </div>
 
         {/* Active Campaigns */}
-        <div className="p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-primary-dark/40 transition-all">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-primary-dark/40 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-text-secondary">
               Active Campaigns
             </span>
             <div className="p-2 rounded-lg bg-primary-dark/10 text-primary-dark border border-primary-dark/20">
               <Rocket className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-4">
-            <div className="text-3xl font-bold text-text-primary">
+          <div className="mt-3 sm:mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-text-primary truncate">
               {loading ? '...' : (stats?.activeCampaigns ?? 0).toLocaleString()}
             </div>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-primary font-medium">
@@ -131,17 +131,17 @@ export default function DashboardPage() {
         </div>
 
         {/* High Opportunity Leads */}
-        <div className="p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-amber-400/40 transition-all">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border flex flex-col justify-between hover:border-amber-400/40 transition-all min-w-0">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-text-secondary">
               High Opportunity Leads
             </span>
             <div className="p-2 rounded-lg bg-amber-400/10 text-amber-400 border border-amber-400/20">
               <Star className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-4">
-            <div className="text-3xl font-bold text-text-primary">
+          <div className="mt-3 sm:mt-4">
+            <div className="text-2xl sm:text-3xl font-bold text-text-primary truncate">
               {loading ? '...' : (stats?.highOpportunityLeads ?? 0).toLocaleString()}
             </div>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-amber-400 font-medium">
@@ -155,40 +155,40 @@ export default function DashboardPage() {
       {/* Grid: Featured Lead Card (Section 6 mockup) + Recent Campaigns */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: High Opportunity Spotlight & Table preview */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
-              <span>High Opportunity Spotlight</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30">
+        <div className="lg:col-span-2 space-y-6 min-w-0">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-base sm:text-lg font-bold text-text-primary flex items-center gap-2 min-w-0">
+              <span className="truncate">High Opportunity Spotlight</span>
+              <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/30 shrink-0">
                 Top Matches
               </span>
             </h2>
-            <Link href="/leads" className="text-xs text-primary hover:underline flex items-center gap-1 font-medium">
-              <span>View all leads</span>
+            <Link href="/leads" className="text-xs text-primary hover:underline flex items-center gap-1 font-medium shrink-0">
+              <span>View all</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           {/* Business Card Preview matching Section 6 */}
           {stats?.recentLeads?.[0] ? (
-            <div className="p-6 rounded-2xl bg-surface border border-border hover:border-primary/40 transition-all shadow-lg space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-primary-dark/20 to-primary/20 border border-primary/30 flex items-center justify-center text-primary font-bold text-lg">
+            <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border hover:border-primary/40 transition-all shadow-lg space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-tr from-primary-dark/20 to-primary/20 border border-primary/30 flex items-center justify-center text-primary font-bold text-base sm:text-lg shrink-0">
                     {stats.recentLeads[0].businessName.charAt(0)}
                   </div>
-                  <div>
-                    <h3 className="text-base font-bold text-text-primary">
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold text-text-primary truncate">
                       {stats.recentLeads[0].businessName}
                     </h3>
-                    <div className="text-xs text-text-secondary">
+                    <div className="text-xs text-text-secondary truncate">
                       {stats.recentLeads[0].category || 'Business'} • {stats.recentLeads[0].city},{' '}
                       {stats.recentLeads[0].country}
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#00C896]/15 text-[#00C896] border border-[#00C896]/30">
+                <div className="flex items-center gap-2 self-start shrink-0">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-[#00C896]/15 text-[#00C896] border border-[#00C896]/30">
                     High Opportunity
                   </span>
                   <ScorePill score={stats.recentLeads[0].opportunityScore} />
@@ -196,16 +196,16 @@ export default function DashboardPage() {
               </div>
 
               {/* Contact Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-text-secondary pt-2">
-                <div className="flex items-center gap-2 truncate">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 text-xs text-text-secondary pt-2">
+                <div className="flex items-center gap-2 min-w-0 truncate">
                   <Globe className="w-3.5 h-3.5 text-primary shrink-0" />
                   <span className="truncate">{stats.recentLeads[0].website || 'No website found'}</span>
                 </div>
-                <div className="flex items-center gap-2 truncate">
+                <div className="flex items-center gap-2 min-w-0 truncate">
                   <Mail className="w-3.5 h-3.5 text-secondary shrink-0" />
                   <span className="truncate">{stats.recentLeads[0].email || 'No public email'}</span>
                 </div>
-                <div className="flex items-center gap-2 truncate">
+                <div className="flex items-center gap-2 min-w-0 truncate">
                   <Phone className="w-3.5 h-3.5 text-accent shrink-0" />
                   <span className="truncate">{stats.recentLeads[0].phone || 'No phone number'}</span>
                 </div>
@@ -225,7 +225,7 @@ export default function DashboardPage() {
                 ))}
                 <Link
                   href={`/leads/${stats.recentLeads[0].id}`}
-                  className="ml-auto inline-flex items-center gap-1 text-xs text-primary hover:text-primary-light font-semibold"
+                  className="w-full sm:w-auto sm:ml-auto inline-flex items-center justify-end gap-1 text-xs text-primary hover:text-primary-light font-semibold pt-1 sm:pt-0"
                 >
                   <span>Inspect Audit & Evidence</span>
                   <ArrowRight className="w-3 h-3" />
@@ -233,12 +233,12 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="p-8 rounded-2xl bg-surface border border-border text-center text-text-secondary">
+            <div className="p-6 sm:p-8 rounded-2xl bg-surface border border-border text-center text-text-secondary text-xs sm:text-sm">
               No leads available yet. Launch a campaign to start discovering!
             </div>
           )}
 
-          {/* Table Preview matching Section 7 */}
+          {/* Table / Mobile Cards Preview */}
           <div className="rounded-2xl bg-surface border border-border overflow-hidden">
             <div className="p-4 border-b border-border flex items-center justify-between">
               <h3 className="text-sm font-bold text-text-primary">Recent Discoveries</h3>
@@ -246,7 +246,42 @@ export default function DashboardPage() {
                 Showing {stats?.recentLeads?.length || 0} leads
               </span>
             </div>
-            <div className="overflow-x-auto">
+
+            {/* Mobile Lead Cards (< sm: 640px) */}
+            <div className="sm:hidden divide-y divide-border">
+              {stats?.recentLeads && stats.recentLeads.length > 0 ? (
+                stats.recentLeads.map((lead: any) => (
+                  <div key={lead.id} className="p-4 space-y-2.5 hover:bg-surface-hover transition-colors">
+                    <div className="flex items-start justify-between gap-2">
+                      <Link href={`/leads/${lead.id}`} className="font-bold text-text-primary hover:text-primary text-xs truncate flex-1">
+                        {lead.businessName}
+                      </Link>
+                      <StatusBadge status={lead.status} />
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-text-secondary">
+                      <span>{lead.city || 'Pakistan'} • {lead.category || 'Business'}</span>
+                      <ScorePill score={lead.opportunityScore} />
+                    </div>
+                    <div className="pt-1 flex justify-end">
+                      <Link
+                        href={`/leads/${lead.id}`}
+                        className="text-xs text-primary hover:underline font-semibold flex items-center gap-1"
+                      >
+                        <span>View Details</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-6 text-center text-text-secondary text-xs">
+                  No leads discovered yet. Launch a campaign to start discovering live leads.
+                </div>
+              )}
+            </div>
+
+            {/* Desktop / Tablet Table (>= sm: 640px) */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-surface-raised text-text-secondary uppercase text-[10px] tracking-wider border-b border-border">
                   <tr>
@@ -265,7 +300,7 @@ export default function DashboardPage() {
                             <div className="w-6 h-6 rounded bg-primary/10 border border-primary/20 flex items-center justify-center text-[10px] text-primary">
                               {lead.businessName.charAt(0)}
                             </div>
-                            <span>{lead.businessName}</span>
+                            <span className="truncate max-w-[180px]">{lead.businessName}</span>
                           </Link>
                         </td>
                         <td className="px-4 py-3 text-text-secondary">{lead.city || 'Pakistan'}</td>

@@ -153,7 +153,7 @@ export default function GenerateLeadsPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="p-6 md:p-8 rounded-2xl bg-surface border border-border space-y-6">
+      <form onSubmit={handleSubmit} className="p-4 sm:p-6 md:p-8 rounded-2xl bg-surface border border-border space-y-6">
         {/* Core Inputs Grid */}
         <div className="space-y-4">
           {/* Lead Type */}
@@ -168,7 +168,7 @@ export default function GenerateLeadsPage() {
                   setLeadType(e.target.value);
                   if (e.target.value !== 'Other') setCustomLeadType('');
                 }}
-                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all"
+                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all min-h-[44px]"
               >
                 {COMMON_LEAD_TYPES.map((t) => (
                   <option key={t} value={t} className="bg-surface text-text-primary">
@@ -186,7 +186,7 @@ export default function GenerateLeadsPage() {
                   placeholder="e.g. Solar panel installers"
                   value={customLeadType}
                   onChange={(e) => setCustomLeadType(e.target.value)}
-                  className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none transition-all"
+                  className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none transition-all min-h-[44px]"
                   required
                 />
               )}
@@ -205,18 +205,18 @@ export default function GenerateLeadsPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. Islamabad, Rawalpindi, Lahore, Karachi, Pakistan"
-                className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all"
+                className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all min-h-[44px]"
                 required
               />
             </div>
             {/* Quick Chips */}
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {COMMON_LOCATIONS.slice(0, 6).map((loc) => (
+            <div className="flex flex-wrap gap-1.5 mt-2.5">
+              {COMMON_LOCATIONS.slice(0, 8).map((loc) => (
                 <button
                   key={loc}
                   type="button"
                   onClick={() => setLocation(loc)}
-                  className={`text-[11px] px-2 py-0.5 rounded-full border transition-all ${
+                  className={`text-[11px] px-3 py-1.5 rounded-full border transition-all min-h-[32px] ${
                     location.toLowerCase() === loc.toLowerCase()
                       ? 'bg-primary/15 text-primary border-primary/40'
                       : 'bg-surface-raised text-text-secondary border-border hover:border-text-secondary'
@@ -242,11 +242,11 @@ export default function GenerateLeadsPage() {
                   max="200"
                   value={quantity}
                   onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 10))}
-                  className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all"
+                  className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all min-h-[44px]"
                 />
               </div>
               <p className="text-[11px] text-text-secondary/70 mt-1">
-                Zero fabrication rule: System will return true qualified count without fake records.
+                Zero fabrication rule: System returns true qualified count without fake records.
               </p>
             </div>
 
@@ -257,7 +257,7 @@ export default function GenerateLeadsPage() {
               <select
                 value={selectedOfferProfile}
                 onChange={(e) => setSelectedOfferProfile(e.target.value)}
-                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all"
+                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none transition-all min-h-[44px]"
               >
                 {offerProfiles.map((p) => (
                   <option key={p.id} value={p.id} className="bg-surface text-text-primary">
@@ -279,49 +279,49 @@ export default function GenerateLeadsPage() {
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider">
               Required Information
             </h3>
-            <div className="space-y-2 text-xs">
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+            <div className="space-y-1.5 text-xs">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={hasWebsite}
                   onChange={(e) => setHasWebsite(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Has website</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={hasEmail}
                   onChange={(e) => setHasEmail(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Has public email</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={hasPhone}
                   onChange={(e) => setHasPhone(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Has phone number</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={hasWhatsapp}
                   onChange={(e) => setHasWhatsapp(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Has WhatsApp</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={hasSocial}
                   onChange={(e) => setHasSocial(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Has social media</span>
               </label>
@@ -333,31 +333,31 @@ export default function GenerateLeadsPage() {
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider">
               Deep Analysis
             </h3>
-            <div className="space-y-2 text-xs">
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+            <div className="space-y-1.5 text-xs">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={websiteAnalysis}
                   onChange={(e) => setWebsiteAnalysis(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Website analysis (Audit HTTPS, viewport, CTA, SEO)</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={opportunityDetection}
                   onChange={(e) => setOpportunityDetection(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Opportunity detection (Evidence-based gaps)</span>
               </label>
-              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary">
+              <label className="flex items-center gap-2.5 cursor-pointer select-none text-text-secondary hover:text-text-primary min-h-[38px] p-1.5 rounded-lg hover:bg-surface-raised transition-colors">
                 <input
                   type="checkbox"
                   checked={technologyDetection}
                   onChange={(e) => setTechnologyDetection(e.target.checked)}
-                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4"
+                  className="rounded border-border bg-surface-raised text-primary focus:ring-0 w-4 h-4 shrink-0"
                 />
                 <span>Technology detection (WordPress, Shopify, Next.js, etc.)</span>
               </label>
@@ -366,17 +366,17 @@ export default function GenerateLeadsPage() {
         </div>
 
         {/* Estimated Results Card */}
-        <div className="p-4 rounded-xl bg-surface-raised border border-border/80 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+        <div className="p-4 rounded-xl bg-surface-raised border border-border/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
             <Info className="w-4 h-4 text-primary shrink-0" />
-            <div>
+            <div className="min-w-0">
               <div className="text-xs font-semibold text-text-primary">Estimated results</div>
-              <div className="text-[11px] text-text-secondary">
+              <div className="text-[11px] text-text-secondary truncate">
                 Up to {quantity} qualified leads with evidence-based scoring
               </div>
             </div>
           </div>
-          <span className="text-xs font-mono font-bold text-primary">
+          <span className="text-xs font-mono font-bold text-primary shrink-0 self-start sm:self-auto">
             Buffer: ~{Math.ceil(quantity * 1.5)} candidates
           </span>
         </div>
@@ -385,7 +385,7 @@ export default function GenerateLeadsPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full py-3.5 px-6 rounded-xl bg-primary hover:bg-primary-light text-background font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full min-h-[48px] py-3.5 px-6 rounded-xl bg-primary hover:bg-primary-light text-background font-bold text-sm tracking-wide transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {submitting ? (
             <>

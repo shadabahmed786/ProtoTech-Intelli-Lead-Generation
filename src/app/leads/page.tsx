@@ -35,6 +35,7 @@ export default function LeadsPage() {
   const [status, setStatus] = useState('All');
   const [minScore, setMinScore] = useState('');
   const [hasWebsite, setHasWebsite] = useState('all');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   // Selected for batch export & list adding
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -218,18 +219,36 @@ export default function LeadsPage() {
       {/* Filter Toolbar */}
       <div className="p-4 rounded-2xl bg-surface border border-border space-y-3">
         <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 text-text-secondary absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search by business name, domain, email, phone, city..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
-            />
+          <div className="flex items-center gap-2 flex-1">
+            <div className="relative flex-1 min-w-0">
+              <Search className="w-4 h-4 text-text-secondary absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search by business name, domain, email, phone, city..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
+              />
+            </div>
+            {/* Mobile Filter Toggle Button */}
+            <button
+              type="button"
+              onClick={() => setShowMobileFilters(!showMobileFilters)}
+              className="md:hidden px-3.5 py-2.5 rounded-xl bg-surface-raised border border-border hover:border-primary text-text-primary text-xs font-semibold flex items-center gap-1.5 min-h-[44px] shrink-0"
+            >
+              <Filter className="w-4 h-4 text-primary" />
+              <span>Filters</span>
+              {(city !== 'All' || status !== 'All' || minScore || hasWebsite !== 'all') && (
+                <span className="w-2 h-2 rounded-full bg-primary" />
+              )}
+            </button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 md:flex md:flex-wrap items-center gap-2 ${
+              showMobileFilters ? 'block' : 'hidden md:flex'
+            }`}
+          >
             {/* City Filter */}
             <select
               value={city}
@@ -237,7 +256,7 @@ export default function LeadsPage() {
                 setCity(e.target.value);
                 setPage(1);
               }}
-              className="bg-surface-raised border border-border rounded-xl px-3 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
+              className="w-full md:w-auto bg-surface-raised border border-border rounded-xl px-3 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
             >
               <option value="All">All Cities</option>
               <option value="Islamabad">Islamabad</option>
@@ -254,7 +273,7 @@ export default function LeadsPage() {
                 setStatus(e.target.value);
                 setPage(1);
               }}
-              className="bg-surface-raised border border-border rounded-xl px-3 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
+              className="w-full md:w-auto bg-surface-raised border border-border rounded-xl px-3 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
             >
               <option value="All">All Statuses</option>
               <option value="New">New</option>
@@ -273,7 +292,7 @@ export default function LeadsPage() {
                 setMinScore(e.target.value);
                 setPage(1);
               }}
-              className="bg-surface-raised border border-border rounded-xl px-3 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
+              className="w-full md:w-auto bg-surface-raised border border-border rounded-xl px-3 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
             >
               <option value="">Any Score</option>
               <option value="80">Score ≥ 80 (High Opp)</option>
@@ -288,7 +307,7 @@ export default function LeadsPage() {
                 setHasWebsite(e.target.value);
                 setPage(1);
               }}
-              className="bg-surface-raised border border-border rounded-xl px-3 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
+              className="w-full md:w-auto bg-surface-raised border border-border rounded-xl px-3 py-2.5 text-xs text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
             >
               <option value="all">Website: Any</option>
               <option value="false">No Website (Redesign)</option>
@@ -297,7 +316,7 @@ export default function LeadsPage() {
 
             <button
               type="submit"
-              className="px-3.5 py-2 rounded-xl bg-surface-raised border border-border text-text-primary hover:border-primary text-xs font-semibold"
+              className="w-full md:w-auto px-4 py-2.5 rounded-xl bg-surface-raised border border-border text-text-primary hover:border-primary text-xs font-semibold min-h-[44px]"
             >
               Apply Filter
             </button>
@@ -305,9 +324,105 @@ export default function LeadsPage() {
         </form>
       </div>
 
-      {/* Main Leads Table (Matching Section 7) */}
+      {/* Main Leads Display: Mobile Cards (< md) & Table Container (>= md) */}
       <div className="rounded-2xl bg-surface border border-border overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Mobile Lead Cards (< md) */}
+        <div className="md:hidden divide-y divide-border">
+          {loading ? (
+            <div className="p-8 text-center text-text-secondary text-xs">Loading leads...</div>
+          ) : leads.length === 0 ? (
+            <div className="p-8 text-center text-text-secondary text-xs">
+              No leads found matching your criteria.
+            </div>
+          ) : (
+            leads.map((lead) => {
+              const isSelected = selectedIds.has(lead.id);
+
+              return (
+                <div
+                  key={lead.id}
+                  className={`p-4 space-y-3 hover:bg-surface-hover transition-colors ${
+                    isSelected ? 'bg-primary/5' : ''
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <button
+                      type="button"
+                      onClick={() => toggleSelect(lead.id)}
+                      aria-label={`Select lead ${lead.businessName}`}
+                      className="mt-0.5 text-text-secondary hover:text-primary p-1 min-w-[32px] min-h-[32px] flex items-center justify-center shrink-0"
+                    >
+                      {isSelected ? (
+                        <CheckSquare className="w-4 h-4 text-primary" />
+                      ) : (
+                        <Square className="w-4 h-4" />
+                      )}
+                    </button>
+                    <div className="min-w-0 flex-1">
+                      <Link
+                        href={`/leads/${lead.id}`}
+                        className="font-bold text-sm text-text-primary hover:text-primary block truncate"
+                      >
+                        {lead.businessName}
+                      </Link>
+                      <div className="text-xs text-text-secondary truncate mt-0.5">
+                        {lead.category || 'Business'} • {lead.city || 'Pakistan'}, {lead.country}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Signals */}
+                  <div className="grid grid-cols-2 gap-2 text-xs text-text-secondary">
+                    {lead.website ? (
+                      <a
+                        href={lead.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary hover:underline truncate flex items-center gap-1"
+                      >
+                        <Globe className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">{lead.website.replace(/^https?:\/\//, '')}</span>
+                      </a>
+                    ) : (
+                      <span className="text-text-secondary/50 italic text-[11px]">No website</span>
+                    )}
+                    {lead.phone ? (
+                      <a
+                        href={`tel:${lead.phone}`}
+                        className="text-text-primary hover:text-primary truncate flex items-center gap-1"
+                      >
+                        <Phone className="w-3.5 h-3.5 text-text-secondary shrink-0" />
+                        <span className="truncate">{lead.phone}</span>
+                      </a>
+                    ) : (
+                      <span className="text-text-secondary/50 italic text-[11px]">No phone</span>
+                    )}
+                  </div>
+
+                  {/* Badges and action */}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <ScorePill score={lead.opportunityScore} />
+                      <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-surface-raised border border-border text-text-secondary">
+                        Qual: {lead.qualityScore}%
+                      </span>
+                      <StatusBadge status={lead.status} />
+                    </div>
+                    <Link
+                      href={`/leads/${lead.id}`}
+                      className="px-3 py-1.5 rounded-lg bg-surface-raised border border-border hover:border-primary text-text-primary text-xs font-semibold shrink-0 min-h-[36px] flex items-center justify-center"
+                    >
+                      View
+                    </Link>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Desktop / Tablet Table (>= md) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-surface-raised text-text-secondary uppercase text-[10px] tracking-wider border-b border-border">
               <tr>
@@ -440,15 +555,15 @@ export default function LeadsPage() {
         </div>
 
         {/* Pagination bar */}
-        <div className="p-4 border-t border-border flex items-center justify-between text-xs text-text-secondary">
-          <div>
+        <div className="p-4 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-text-secondary">
+          <div className="text-center sm:text-left">
             Showing {(page - 1) * 15 + 1}–{Math.min(page * 15, total)} of {total} leads
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-1.5 rounded-lg bg-surface-raised border border-border text-text-primary hover:border-primary disabled:opacity-40"
+              className="p-2 rounded-lg bg-surface-raised border border-border text-text-primary hover:border-primary disabled:opacity-40 min-w-[36px] min-h-[36px] flex items-center justify-center"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -458,7 +573,7 @@ export default function LeadsPage() {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="p-1.5 rounded-lg bg-surface-raised border border-border text-text-primary hover:border-primary disabled:opacity-40"
+              className="p-2 rounded-lg bg-surface-raised border border-border text-text-primary hover:border-primary disabled:opacity-40 min-w-[36px] min-h-[36px] flex items-center justify-center"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

@@ -225,32 +225,32 @@ export default function LeadDetailPage() {
           <span>Back to Leads</span>
         </Link>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-primary-dark/20 to-primary/20 border border-primary/30 flex items-center justify-center text-primary font-bold text-xl">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-tr from-primary-dark/20 to-primary/20 border border-primary/30 flex items-center justify-center text-primary font-bold text-lg sm:text-xl shrink-0">
               {lead.businessName.charAt(0)}
             </div>
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-xl md:text-2xl font-bold text-text-primary">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-text-primary truncate">
                   {lead.businessName}
                 </h1>
                 <StatusBadge status={lead.status} />
               </div>
-              <p className="text-xs text-text-secondary mt-0.5">
+              <p className="text-xs text-text-secondary mt-0.5 truncate">
                 {lead.category || 'Business'} • {lead.city}, {lead.country}
               </p>
             </div>
           </div>
 
           {/* Status Changer & Assignment dropdowns */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {/* Status Selector */}
-            <div className="flex items-center gap-2 bg-surface p-1.5 rounded-xl border border-border">
-              <span className="text-[11px] font-semibold text-text-secondary pl-2">Status:</span>
+            <div className="flex items-center gap-2 bg-surface p-1.5 rounded-xl border border-border min-h-[40px]">
+              <span className="text-[11px] font-semibold text-text-secondary pl-1.5 sm:pl-2">Status:</span>
               <select
                 value={status}
                 onChange={(e) => handleStatusChange(e.target.value)}
-                className="bg-surface-raised border border-border rounded-lg px-2.5 py-1 text-xs text-text-primary focus:border-primary focus:outline-none"
+                className="bg-surface-raised border border-border rounded-lg px-2 sm:px-2.5 py-1 text-xs text-text-primary focus:border-primary focus:outline-none min-h-[32px]"
               >
                 {STATUS_OPTIONS.map((st) => (
                   <option key={st} value={st}>
@@ -261,12 +261,12 @@ export default function LeadDetailPage() {
             </div>
 
             {/* Assignment Selector */}
-            <div className="flex items-center gap-2 bg-surface p-1.5 rounded-xl border border-border">
-              <span className="text-[11px] font-semibold text-text-secondary pl-2">Assigned:</span>
+            <div className="flex items-center gap-2 bg-surface p-1.5 rounded-xl border border-border min-h-[40px]">
+              <span className="text-[11px] font-semibold text-text-secondary pl-1.5 sm:pl-2">Assigned:</span>
               <select
                 value={assignedTo}
                 onChange={(e) => handleAssignmentChange(e.target.value)}
-                className="bg-surface-raised border border-border rounded-lg px-2.5 py-1 text-xs text-text-primary focus:border-primary focus:outline-none"
+                className="bg-surface-raised border border-border rounded-lg px-2 sm:px-2.5 py-1 text-xs text-text-primary focus:border-primary focus:outline-none min-h-[32px]"
               >
                 {teamMembers.map((m) => (
                   <option key={m} value={m}>
@@ -282,7 +282,7 @@ export default function LeadDetailPage() {
                 fetchLists();
                 setShowListModal(true);
               }}
-              className="px-3 py-1.5 rounded-xl bg-surface-raised border border-border hover:border-primary/40 text-xs font-semibold text-text-primary flex items-center gap-1.5 transition-all"
+              className="px-3 py-2 rounded-xl bg-surface-raised border border-border hover:border-primary/40 text-xs font-semibold text-text-primary flex items-center gap-1.5 transition-all min-h-[40px]"
             >
               <ListPlus className="w-3.5 h-3.5 text-primary" />
               <span>Add to List</span>
@@ -292,7 +292,7 @@ export default function LeadDetailPage() {
             <button
               onClick={handleSuppress}
               disabled={suppressing || lead.status === 'Suppressed'}
-              className="px-3 py-1.5 rounded-xl bg-rose-950/40 text-rose-300 border border-rose-800/40 hover:bg-rose-900/50 text-xs font-semibold flex items-center gap-1.5 transition-all disabled:opacity-50"
+              className="px-3 py-2 rounded-xl bg-rose-950/40 text-rose-300 border border-rose-800/40 hover:bg-rose-900/50 text-xs font-semibold flex items-center gap-1.5 transition-all disabled:opacity-50 min-h-[40px]"
             >
               <Ban className="w-3.5 h-3.5" />
               <span>{lead.status === 'Suppressed' ? 'Suppressed' : 'Suppress'}</span>
@@ -304,7 +304,7 @@ export default function LeadDetailPage() {
       {/* Add to List Modal */}
       {showListModal && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-surface border border-border p-6 space-y-4 shadow-2xl">
+          <div className="w-[calc(100%-32px)] max-w-sm rounded-2xl bg-surface border border-border p-5 sm:p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-border/80 pb-3">
               <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
                 <Folder className="w-4 h-4 text-primary" />
@@ -452,8 +452,8 @@ export default function LeadDetailPage() {
           </div>
 
           {/* Card 2: Explainable Scoring Breakdown (Rule 25 & 26) */}
-          <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-sm font-bold text-text-primary uppercase tracking-wider">
                   Explainable Score Breakdown
@@ -462,9 +462,9 @@ export default function LeadDetailPage() {
                   Deterministic point assignment based on active Offer Profile signals.
                 </p>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <div className="text-xs text-text-secondary">Quality Score</div>
+              <div className="flex items-center gap-3 self-start sm:self-auto shrink-0">
+                <div className="text-left sm:text-right">
+                  <div className="text-[11px] text-text-secondary">Quality Score</div>
                   <div className="font-mono font-bold text-sm text-[#00C896]">{lead.qualityScore}/100</div>
                 </div>
                 <ScorePill score={lead.opportunityScore} label="Opp Score" />
@@ -503,7 +503,7 @@ export default function LeadDetailPage() {
           </div>
 
           {/* Card 3: Detected Opportunities with Concrete Evidence (Rule 22) */}
-          <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
             <h2 className="text-sm font-bold text-text-primary uppercase tracking-wider">
               Detected Opportunities & Concrete Evidence
             </h2>
@@ -512,19 +512,19 @@ export default function LeadDetailPage() {
               {lead.opportunities?.map((opp: any) => (
                 <div
                   key={opp.id}
-                  className="p-4 rounded-xl bg-surface-raised border border-border space-y-1.5"
+                  className="p-3.5 sm:p-4 rounded-xl bg-surface-raised border border-border space-y-1.5"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-amber-300 text-xs flex items-center gap-1.5">
-                      <AlertTriangle className="w-3.5 h-3.5" />
-                      <span>{(opp.opportunityType || opp.type || 'Opportunity').replace(/_/g, ' ').toUpperCase()}</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-amber-300 text-xs flex items-center gap-1.5 min-w-0 truncate">
+                      <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{(opp.opportunityType || opp.type || 'Opportunity').replace(/_/g, ' ').toUpperCase()}</span>
                     </span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-surface border border-border text-text-secondary">
-                      Confidence: {opp.confidence}
+                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-surface border border-border text-text-secondary shrink-0">
+                      Conf: {opp.confidence}
                     </span>
                   </div>
                   <p className="text-xs text-text-primary font-medium">{opp.description}</p>
-                  <div className="p-2 rounded-lg bg-surface border border-border/60 text-[11px] text-text-secondary font-mono">
+                  <div className="p-2 rounded-lg bg-surface border border-border/60 text-[11px] text-text-secondary font-mono break-all">
                     <strong className="text-primary font-sans">Evidence:</strong> {opp.evidence}
                   </div>
                 </div>
@@ -539,12 +539,12 @@ export default function LeadDetailPage() {
 
           {/* Card 4: Website Audit Checklist (Rule 21) */}
           {lead.audit && (
-            <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+            <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
               <h2 className="text-sm font-bold text-text-primary uppercase tracking-wider">
                 Deterministic Website Audit
               </h2>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 text-xs">
                 <div className="p-3 rounded-xl bg-surface-raised border border-border flex items-center justify-between">
                   <span>HTTPS Secure</span>
                   {lead.audit.hasHttps ? (

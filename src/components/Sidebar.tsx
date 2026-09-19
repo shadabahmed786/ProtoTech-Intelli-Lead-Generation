@@ -13,6 +13,7 @@ import {
   Target,
   Settings,
   LogOut,
+  X,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -26,7 +27,12 @@ const NAV_ITEMS = [
   { label: 'Settings', href: '/settings', icon: Settings },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ mobileOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
@@ -61,36 +67,53 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-surface border-r border-border flex flex-col justify-between h-screen sticky top-0 z-40 select-none">
+    <aside className="w-full lg:w-64 bg-surface border-r border-border flex flex-col justify-between h-full lg:h-screen lg:sticky lg:top-0 select-none overflow-y-auto shadow-2xl lg:shadow-none">
       {/* Brand Header */}
       <div>
-        <div className="p-6 pb-4 border-b border-border/60">
-          <Link href="/" className="flex items-center gap-3 group">
-            {/* ProtoTech Brand Logo */}
-            <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary/40 flex items-center justify-center bg-black/40 group-hover:border-primary transition-all shadow-[0_0_15px_rgba(0,229,255,0.25)] shrink-0">
-              <img
-                src="/logo.png"
-                alt="ProtoTech Solution"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-              />
-            </div>
-            <div>
-              <div className="flex items-center gap-1">
-                <span className="font-bold text-text-primary text-lg tracking-tight">ProtoTech</span>
-                <span className="font-bold text-primary text-lg tracking-tight">Intelli</span>
+        <div className="p-5 sm:p-6 pb-4 border-b border-border/60">
+          <div className="flex items-center justify-between">
+            <Link
+              href="/"
+              onClick={() => onClose?.()}
+              className="flex items-center gap-3 group min-w-0"
+            >
+              {/* ProtoTech Brand Logo */}
+              <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary/40 flex items-center justify-center bg-black/40 group-hover:border-primary transition-all shadow-[0_0_15px_rgba(0,229,255,0.25)] shrink-0">
+                <img
+                  src="/logo.png"
+                  alt="ProtoTech Solution"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                />
               </div>
-              <div className="text-[11px] font-medium tracking-wider text-text-secondary uppercase">
-                Lead Generation
+              <div className="min-w-0">
+                <div className="flex items-center gap-1">
+                  <span className="font-bold text-text-primary text-base sm:text-lg tracking-tight">ProtoTech</span>
+                  <span className="font-bold text-primary text-base sm:text-lg tracking-tight">Intelli</span>
+                </div>
+                <div className="text-[10px] sm:text-[11px] font-medium tracking-wider text-text-secondary uppercase truncate">
+                  Lead Generation
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+
+            {/* Close button for mobile drawer */}
+            {onClose && (
+              <button
+                onClick={onClose}
+                aria-label="Close navigation"
+                className="lg:hidden p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-raised transition-colors shrink-0 ml-1 min-w-[40px] min-h-[40px] flex items-center justify-center"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
           <p className="text-[11px] text-text-secondary/70 italic mt-2">
             Find. Understand. Convert.
           </p>
         </div>
 
         {/* Navigation links */}
-        <nav className="p-4 space-y-1">
+        <nav className="p-3 sm:p-4 space-y-1">
           {NAV_ITEMS.map((item) => {
             const isActive =
               item.href === '/'
@@ -102,14 +125,15 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                onClick={() => onClose?.()}
+                className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium transition-all min-h-[44px] ${
                   isActive
                     ? 'bg-primary/15 text-primary border border-primary/30 shadow-[0_0_12px_rgba(0,229,255,0.12)]'
                     : 'text-text-secondary hover:text-text-primary hover:bg-surface-raised'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : 'text-text-secondary'}`} />
-                <span>{item.label}</span>
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-primary' : 'text-text-secondary'}`} />
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}

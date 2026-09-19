@@ -70,14 +70,14 @@ export default function SettingsPage() {
       </div>
 
       {/* System Governance Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-5 rounded-2xl bg-surface border border-border space-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border space-y-2">
           <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
             <Shield className="w-4 h-4" />
             <span>SSRF Protection</span>
           </div>
-          <div className="text-lg font-bold text-[#00C896] flex items-center gap-1.5">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="text-base sm:text-lg font-bold text-[#00C896] flex items-center gap-1.5">
+            <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
             <span>Active & Enforced</span>
           </div>
           <p className="text-[11px] text-text-secondary leading-relaxed">
@@ -85,12 +85,12 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-surface border border-border space-y-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border space-y-2">
           <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
             <Server className="w-4 h-4" />
             <span>Crawler Limits</span>
           </div>
-          <div className="text-lg font-bold text-text-primary">
+          <div className="text-base sm:text-lg font-bold text-text-primary">
             Max 5 Pages / Business
           </div>
           <p className="text-[11px] text-text-secondary leading-relaxed">
@@ -98,12 +98,12 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-surface border border-border space-y-2">
+        <div className="p-4 sm:p-5 rounded-2xl bg-surface border border-border space-y-2 sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider">
             <Shield className="w-4 h-4" />
             <span>Cost Transparency</span>
           </div>
-          <div className="text-lg font-bold text-[#00C896]">
+          <div className="text-base sm:text-lg font-bold text-[#00C896]">
             $0.00 (100% Free V1)
           </div>
           <p className="text-[11px] text-text-secondary leading-relaxed">
@@ -113,11 +113,11 @@ export default function SettingsPage() {
       </div>
 
       {/* Suppression List Management (Rule 29) */}
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
-              <Ban className="w-5 h-5 text-rose-400" />
+            <h2 className="text-sm sm:text-base font-bold text-text-primary flex items-center gap-2">
+              <Ban className="w-5 h-5 text-rose-400 flex-shrink-0" />
               <span>Suppression Blocklist</span>
             </h2>
             <p className="text-xs text-text-secondary mt-0.5">
@@ -127,11 +127,11 @@ export default function SettingsPage() {
         </div>
 
         {/* Add suppression item */}
-        <form onSubmit={handleAddSuppression} className="p-4 rounded-xl bg-surface-raised border border-border flex flex-col sm:flex-row gap-3">
+        <form onSubmit={handleAddSuppression} className="p-3.5 sm:p-4 rounded-xl bg-surface-raised border border-border flex flex-col sm:flex-row gap-2.5 sm:gap-3">
           <select
             value={suppType}
             onChange={(e) => setSuppType(e.target.value)}
-            className="bg-surface border border-border rounded-lg px-3 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
+            className="bg-surface border border-border rounded-lg px-3 py-2.5 min-h-[44px] text-xs text-text-primary focus:border-primary focus:outline-none"
           >
             <option value="domain">Domain</option>
             <option value="phone">Phone Number</option>
@@ -143,7 +143,7 @@ export default function SettingsPage() {
             placeholder="Value to suppress (e.g. competitor.com or +92300...)"
             value={suppValue}
             onChange={(e) => setSuppValue(e.target.value)}
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2.5 min-h-[44px] text-xs text-text-primary focus:border-primary focus:outline-none"
             required
           />
           <input
@@ -151,12 +151,12 @@ export default function SettingsPage() {
             placeholder="Reason (e.g. Do Not Contact / Existing Client)"
             value={suppReason}
             onChange={(e) => setSuppReason(e.target.value)}
-            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-xs text-text-primary focus:border-primary focus:outline-none"
+            className="flex-1 bg-surface border border-border rounded-lg px-3 py-2.5 min-h-[44px] text-xs text-text-primary focus:border-primary focus:outline-none"
           />
           <button
             type="submit"
             disabled={submitting}
-            className="px-4 py-2 rounded-lg bg-rose-900/60 hover:bg-rose-800 text-rose-100 border border-rose-700/50 font-semibold text-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+            className="px-4 py-2.5 min-h-[44px] w-full sm:w-auto rounded-lg bg-rose-900/60 hover:bg-rose-800 text-rose-100 border border-rose-700/50 font-semibold text-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add to Blocklist</span>
@@ -164,8 +164,8 @@ export default function SettingsPage() {
         </form>
 
         {/* Current suppressions table */}
-        <div className="rounded-xl bg-surface-raised border border-border overflow-hidden">
-          <table className="w-full text-left text-xs">
+        <div className="rounded-xl bg-surface-raised border border-border overflow-x-auto">
+          <table className="w-full min-w-[550px] text-left text-xs">
             <thead className="bg-surface text-text-secondary border-b border-border text-[10px] uppercase">
               <tr>
                 <th className="px-4 py-2.5">Type</th>
@@ -204,14 +204,14 @@ export default function SettingsPage() {
       </div>
 
       {/* Audit Log (Rule 95) */}
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
-          <Clock className="w-5 h-5 text-primary" />
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <h2 className="text-sm sm:text-base font-bold text-text-primary flex items-center gap-2">
+          <Clock className="w-5 h-5 text-primary flex-shrink-0" />
           <span>System Audit Log</span>
         </h2>
 
-        <div className="rounded-xl bg-surface-raised border border-border overflow-hidden">
-          <table className="w-full text-left text-xs">
+        <div className="rounded-xl bg-surface-raised border border-border overflow-x-auto">
+          <table className="w-full min-w-[620px] text-left text-xs">
             <thead className="bg-surface text-text-secondary border-b border-border text-[10px] uppercase">
               <tr>
                 <th className="px-4 py-2.5">Action</th>

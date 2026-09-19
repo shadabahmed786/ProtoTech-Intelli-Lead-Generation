@@ -47,15 +47,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex flex-col justify-center items-center p-3.5 sm:p-6 relative overflow-hidden">
       {/* Subtle Background Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-72 h-72 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-full max-w-md z-10 space-y-6">
+      <div className="w-full max-w-md z-10 space-y-5 sm:space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl overflow-hidden border border-primary/40 shadow-[0_0_25px_rgba(0,229,255,0.35)] mb-2 bg-black/40">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-primary/40 shadow-[0_0_25px_rgba(0,229,255,0.35)] mb-1 sm:mb-2 bg-black/40">
             <img
               src="/logo.png"
               alt="ProtoTech Solution"
@@ -65,13 +65,13 @@ export default function LoginPage() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-text-primary">
             ProtoTech <span className="text-primary">Intelli</span>
           </h1>
-          <p className="text-xs text-text-secondary">
+          <p className="text-xs text-text-secondary px-2">
             AI-Assisted Lead Generation & Business Intelligence (v1.0)
           </p>
         </div>
 
         {/* Login Box */}
-        <div className="p-7 rounded-2xl bg-surface border border-border shadow-2xl space-y-5">
+        <div className="p-5 sm:p-7 rounded-2xl bg-surface border border-border shadow-2xl space-y-5">
           <div className="flex items-center justify-between border-b border-border/80 pb-3">
             <h2 className="text-sm font-bold text-text-primary">
               {isRegister ? 'Create Production Account' : 'Sign In to Workspace'}
@@ -101,7 +101,7 @@ export default function LoginPage() {
                       placeholder="e.g. Lead Researcher"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none"
+                      className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 min-h-[44px] text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none"
                     />
                   </div>
                 </div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   <select
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
-                    className="w-full bg-surface-raised border border-border rounded-xl px-3.5 py-2.5 text-text-primary focus:border-primary focus:outline-none"
+                    className="w-full bg-surface-raised border border-border rounded-xl px-3.5 py-2.5 min-h-[44px] text-text-primary focus:border-primary focus:outline-none"
                   >
                     <option value="Admin">Admin (Full Control)</option>
                     <option value="Member">Member (Generate & Manage)</option>
@@ -131,7 +131,7 @@ export default function LoginPage() {
                   placeholder="admin@prototech.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none"
+                  className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 min-h-[44px] text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none"
                 />
               </div>
             </div>
@@ -146,7 +146,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none"
+                  className="w-full bg-surface-raised border border-border rounded-xl pl-10 pr-4 py-2.5 min-h-[44px] text-text-primary placeholder:text-text-secondary/50 focus:border-primary focus:outline-none"
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 rounded-xl bg-primary hover:bg-primary-light text-background font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,229,255,0.3)] disabled:opacity-50 mt-2"
+              className="w-full py-2.5 px-4 min-h-[44px] rounded-xl bg-primary hover:bg-primary-light text-background font-bold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,229,255,0.3)] disabled:opacity-50 mt-2"
             >
               <span>{loading ? 'Authenticating...' : isRegister ? 'Create Account' : 'Sign In'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -168,7 +168,7 @@ export default function LoginPage() {
                 setIsRegister(!isRegister);
                 setError('');
               }}
-              className="text-xs text-primary hover:underline font-medium"
+              className="text-xs text-primary hover:underline font-medium min-h-[40px] inline-flex items-center justify-center"
             >
               {isRegister
                 ? 'Already have an account? Sign In'

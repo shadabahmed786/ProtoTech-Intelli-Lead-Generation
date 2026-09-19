@@ -178,11 +178,11 @@ export default function OfferProfilesPage() {
                   <span className="text-[11px] font-semibold text-text-secondary uppercase block mb-1.5">
                     Signal Weights (Max 100):
                   </span>
-                  <div className="grid grid-cols-2 gap-1.5 text-[11px] font-mono">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px] font-mono">
                     {Object.entries(weights).map(([k, v]) => (
-                      <div key={k} className="flex justify-between bg-surface-raised px-2 py-1 rounded">
-                        <span className="text-text-secondary capitalize truncate">{k.replace(/_/g, ' ')}</span>
-                        <span className="text-primary font-bold">+{v as any}</span>
+                      <div key={k} className="flex justify-between items-center bg-surface-raised px-2.5 py-1.5 rounded min-w-0">
+                        <span className="text-text-secondary capitalize truncate mr-2">{k.replace(/_/g, ' ')}</span>
+                        <span className="text-primary font-bold shrink-0">+{v as any}</span>
                       </div>
                     ))}
                   </div>
@@ -194,9 +194,9 @@ export default function OfferProfilesPage() {
       </div>
 
       {/* Create New Offer Profile Form */}
-      <div className="p-6 rounded-2xl bg-surface border border-border space-y-4">
-        <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
-          <Plus className="w-5 h-5 text-primary" />
+      <div className="p-4 sm:p-6 rounded-2xl bg-surface border border-border space-y-4">
+        <h2 className="text-sm sm:text-base font-bold text-text-primary flex items-center gap-2">
+          <Plus className="w-5 h-5 text-primary shrink-0" />
           <span>Add New Custom Offer Profile</span>
         </h2>
 
@@ -211,7 +211,7 @@ export default function OfferProfilesPage() {
                 placeholder="e.g. E-Commerce Redesign"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2 text-text-primary focus:border-primary focus:outline-none"
+                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
                 required
               />
             </div>
@@ -224,7 +224,7 @@ export default function OfferProfilesPage() {
                 placeholder="What this profile sells..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2 text-text-primary focus:border-primary focus:outline-none"
+                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
               />
             </div>
           </div>
@@ -239,7 +239,7 @@ export default function OfferProfilesPage() {
                 placeholder="e.g. Fashion, Retail, Supermarkets"
                 value={targetIndustries}
                 onChange={(e) => setTargetIndustries(e.target.value)}
-                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2 text-text-primary focus:border-primary focus:outline-none"
+                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
               />
             </div>
             <div>
@@ -251,7 +251,7 @@ export default function OfferProfilesPage() {
                 placeholder="e.g. Islamabad, Lahore, Karachi"
                 value={targetLocations}
                 onChange={(e) => setTargetLocations(e.target.value)}
-                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2 text-text-primary focus:border-primary focus:outline-none"
+                className="w-full bg-surface-raised border border-border rounded-xl px-4 py-2.5 text-text-primary focus:border-primary focus:outline-none min-h-[44px]"
               />
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function OfferProfilesPage() {
           <button
             type="submit"
             disabled={creating}
-            className="px-5 py-2.5 rounded-xl bg-primary text-background font-bold text-xs hover:bg-primary-light transition-all flex items-center gap-2 shadow-[0_0_12px_rgba(0,229,255,0.2)] disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-primary text-background font-bold text-xs hover:bg-primary-light transition-all flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(0,229,255,0.2)] disabled:opacity-50 min-h-[44px] w-full sm:w-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Create Offer Profile</span>

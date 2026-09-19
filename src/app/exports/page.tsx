@@ -69,7 +69,7 @@ export default function ExportsPage() {
         <button
           onClick={handleCreateExport}
           disabled={generating}
-          className="px-4 py-2.5 rounded-xl bg-primary text-background font-semibold text-xs hover:bg-primary-light transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(0,229,255,0.25)] disabled:opacity-50"
+          className="px-4 py-2.5 rounded-xl bg-primary text-background font-bold text-xs hover:bg-primary-light transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,229,255,0.25)] disabled:opacity-50 min-h-[44px] w-full sm:w-auto shrink-0"
         >
           <Download className="w-4 h-4" />
           <span>{generating ? 'Compiling CSV...' : 'Export All Leads (CSV)'}</span>
@@ -77,9 +77,9 @@ export default function ExportsPage() {
       </div>
 
       {/* Security callout */}
-      <div className="p-4 rounded-xl bg-surface-raised border border-border flex items-center gap-3">
-        <ShieldCheck className="w-5 h-5 text-[#00C896] shrink-0" />
-        <div className="text-xs text-text-secondary">
+      <div className="p-4 rounded-xl bg-surface-raised border border-border flex items-start sm:items-center gap-3">
+        <ShieldCheck className="w-5 h-5 text-[#00C896] shrink-0 mt-0.5 sm:mt-0" />
+        <div className="text-xs text-text-secondary leading-relaxed">
           <strong className="text-text-primary">Formula Injection Protected:</strong> All fields beginning with <code className="text-primary font-mono">=, +, -, @</code> are automatically sanitized with leading apostrophes according to OWASP spreadsheet security standards.
         </div>
       </div>
@@ -117,8 +117,8 @@ export default function ExportsPage() {
                 exports.map((exp) => (
                   <tr key={exp.id} className="hover:bg-surface-hover transition-colors">
                     <td className="px-4 py-3 font-mono font-medium text-text-primary flex items-center gap-2">
-                      <FileSpreadsheet className="w-4 h-4 text-primary" />
-                      <span>{exp.filename}</span>
+                      <FileSpreadsheet className="w-4 h-4 text-primary shrink-0" />
+                      <span className="truncate max-w-[150px] sm:max-w-xs">{exp.filename}</span>
                     </td>
                     <td className="px-4 py-3">
                       <span className="px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 text-[10px] font-bold">

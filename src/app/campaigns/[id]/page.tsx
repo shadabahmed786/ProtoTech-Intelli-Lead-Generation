@@ -229,63 +229,103 @@ export default function CampaignDetailPage() {
       </div>
 
       {/* Metric Counters (Requested vs Discovered vs Valid vs Duplicates vs Rejected vs Final Leads) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="p-4 rounded-xl bg-surface border border-border">
-          <div className="text-[10px] uppercase font-semibold text-text-secondary">Requested</div>
-          <div className="text-2xl font-bold text-text-primary mt-1">{campaign.quantityRequested}</div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+        <div className="p-3 sm:p-4 rounded-xl bg-surface border border-border">
+          <div className="text-[10px] uppercase font-semibold text-text-secondary truncate">Requested</div>
+          <div className="text-xl sm:text-2xl font-bold text-text-primary mt-1 truncate">{campaign.quantityRequested}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-surface border border-border">
-          <div className="text-[10px] uppercase font-semibold text-text-secondary">Discovered</div>
-          <div className="text-2xl font-bold text-primary mt-1">{campaign.discoveredCount}</div>
+        <div className="p-3 sm:p-4 rounded-xl bg-surface border border-border">
+          <div className="text-[10px] uppercase font-semibold text-text-secondary truncate">Discovered</div>
+          <div className="text-xl sm:text-2xl font-bold text-primary mt-1 truncate">{campaign.discoveredCount}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-surface border border-border">
-          <div className="text-[10px] uppercase font-semibold text-text-secondary">Valid / Qual</div>
-          <div className="text-2xl font-bold text-[#00C896] mt-1">{campaign.validCount}</div>
+        <div className="p-3 sm:p-4 rounded-xl bg-surface border border-border">
+          <div className="text-[10px] uppercase font-semibold text-text-secondary truncate">Valid / Qual</div>
+          <div className="text-xl sm:text-2xl font-bold text-[#00C896] mt-1 truncate">{campaign.validCount}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-surface border border-border">
-          <div className="text-[10px] uppercase font-semibold text-text-secondary">Duplicates</div>
-          <div className="text-2xl font-bold text-text-secondary mt-1">{campaign.duplicatesCount}</div>
+        <div className="p-3 sm:p-4 rounded-xl bg-surface border border-border">
+          <div className="text-[10px] uppercase font-semibold text-text-secondary truncate">Duplicates</div>
+          <div className="text-xl sm:text-2xl font-bold text-text-secondary mt-1 truncate">{campaign.duplicatesCount}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-surface border border-border">
-          <div className="text-[10px] uppercase font-semibold text-text-secondary">Rejected</div>
-          <div className="text-2xl font-bold text-text-secondary mt-1">{campaign.rejectedCount}</div>
+        <div className="p-3 sm:p-4 rounded-xl bg-surface border border-border">
+          <div className="text-[10px] uppercase font-semibold text-text-secondary truncate">Rejected</div>
+          <div className="text-xl sm:text-2xl font-bold text-text-secondary mt-1 truncate">{campaign.rejectedCount}</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-surface border border-primary/40 bg-primary/5">
-          <div className="text-[10px] uppercase font-semibold text-primary">Final Leads</div>
-          <div className="text-2xl font-bold text-text-primary mt-1">{campaign.finalLeadsCount}</div>
+        <div className="p-3 sm:p-4 rounded-xl bg-surface border border-primary/40 bg-primary/5">
+          <div className="text-[10px] uppercase font-semibold text-primary truncate">Final Leads</div>
+          <div className="text-xl sm:text-2xl font-bold text-text-primary mt-1 truncate">{campaign.finalLeadsCount}</div>
         </div>
       </div>
 
       {/* 2 Cols: Discovered Leads Table + Live Event Logs */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Discovered Leads List */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-text-primary">
+        <div className="lg:col-span-2 space-y-4 min-w-0">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-sm sm:text-base font-bold text-text-primary truncate">
               Discovered Leads ({campaign.leads?.length || 0})
             </h2>
             <Link
               href={`/leads?campaignId=${campaign.id}`}
-              className="text-xs text-primary hover:underline font-semibold"
+              className="text-xs text-primary hover:underline font-semibold shrink-0"
             >
-              Filter in Leads table
+              Filter in Leads
             </Link>
           </div>
 
           <div className="rounded-2xl bg-surface border border-border overflow-hidden">
-            <div className="overflow-x-auto">
+            {/* Mobile Discovered Lead Cards (< sm) */}
+            <div className="sm:hidden divide-y divide-border">
+              {campaign.leads?.map((lead: any) => (
+                <div key={lead.id} className="p-3.5 space-y-2 hover:bg-surface-hover transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <Link href={`/leads/${lead.id}`} className="font-bold text-xs text-text-primary hover:text-primary truncate flex-1">
+                      {lead.businessName}
+                    </Link>
+                    <ScorePill score={lead.opportunityScore} />
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-text-secondary">
+                    <span className="truncate">{lead.city || 'Pakistan'} • {lead.category}</span>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] ${lead.website ? 'bg-primary/10 text-primary' : 'bg-surface-raised text-text-secondary/50'}`}>
+                        {lead.website ? 'Web' : 'No Web'}
+                      </span>
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] ${lead.phone ? 'bg-[#00C896]/10 text-[#00C896]' : 'bg-surface-raised text-text-secondary/50'}`}>
+                        {lead.phone ? 'Phone' : 'No Phone'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="pt-1 flex justify-end">
+                    <Link
+                      href={`/leads/${lead.id}`}
+                      className="text-primary hover:text-primary-light font-semibold text-xs flex items-center gap-1 min-h-[30px]"
+                    >
+                      <span>Inspect Details</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+              {(!campaign.leads || campaign.leads.length === 0) && (
+                <div className="p-8 text-center text-text-secondary text-xs">
+                  Discovery in progress... candidate businesses will appear here.
+                </div>
+              )}
+            </div>
+
+            {/* Desktop / Tablet Table (>= sm) */}
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-surface-raised text-text-secondary uppercase text-[10px] tracking-wider border-b border-border">
                   <tr>
                     <th className="px-4 py-3">Business</th>
                     <th className="px-4 py-3">Contact Signals</th>
                     <th className="px-4 py-3">Score</th>
-                    <th className="px-4 py-3">Action</th>
+                    <th className="px-4 py-3 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -293,7 +333,7 @@ export default function CampaignDetailPage() {
                     <tr key={lead.id} className="hover:bg-surface-hover transition-colors">
                       <td className="px-4 py-3 font-medium text-text-primary">
                         <Link href={`/leads/${lead.id}`} className="hover:text-primary">
-                          <div className="font-bold">{lead.businessName}</div>
+                          <div className="font-bold truncate max-w-[180px]">{lead.businessName}</div>
                           <div className="text-[11px] text-text-secondary">
                             {lead.city || 'Pakistan'} • {lead.category}
                           </div>
@@ -320,10 +360,10 @@ export default function CampaignDetailPage() {
                       <td className="px-4 py-3">
                         <ScorePill score={lead.opportunityScore} />
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 text-right">
                         <Link
                           href={`/leads/${lead.id}`}
-                          className="text-primary hover:text-primary-light font-semibold text-xs flex items-center gap-1"
+                          className="text-primary hover:text-primary-light font-semibold text-xs inline-flex items-center gap-1"
                         >
                           <span>Inspect</span>
                           <ChevronRight className="w-3 h-3" />
