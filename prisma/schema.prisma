@@ -1,0 +1,285 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  role      String   @default("Member") // Admin, Member, Viewer
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OfferProfile {
+  id              String     @id @default(uuid())
+  name            String
+  description     String?
+  targetIndustries String    // JSON array of strings e.g. ["Restaurants", "Clinics"]
+  targetLocations  String    // JSON array of strings e.g. ["Pakistan", "Islamabad"]
+  signalWeights   String     // JSON object of weights { "no_website": 25, ... }
+  exclusions      String?    // JSON array of exclusions
+  isDefault       Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  campaigns       Campaign[]
+}
+
+model Campaign {
+  id                String          @id @default(uuid())
+  name              String
+  leadType          String
+  location          String
+  quantityRequested Int
+  offerProfileId    String?
+  offerProfile      OfferProfile?   @relation(fields: [offerProfileId], references: [id])
+  status            String          @default("Queued") // Draft, Queued, Discovering, Extracting, Verifying, Analyzing, Scoring, Completed, Completed Partial, Failed, Cancelled
+  progressPercent   Int             @default(0)
+  currentStage      String          @default("Queued")
+  discoveredCount   Int             @default(0)
+  validCount        Int             @default(0)
+  duplicatesCount   Int             @default(0)
+  rejectedCount     Int             @default(0)
+  finalLeadsCount   Int             @default(0)
+  errorMessage      String?
+  createdBy         String          @default("Admin")
+  createdAt         DateTime        @default(now())
+  completedAt       DateTime?
+  leads             Lead[]
+  events            CampaignEvent[]
+  jobs              CampaignJob[]
+}
+
+model CampaignJob {
+  id         String    @id @default(uuid())
+  campaignId String
+  campaign   Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  jobType    String
+  status     String    @default("pending") // pending, processing, completed, failed, cancelled
+  startedAt  DateTime?
+  finishedAt DateTime?
+  error      String?
+  createdAt  DateTime  @default(now())
+}
+
+model CampaignEvent {
+  id         String   @id @default(uuid())
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  stage      String
+  message    String
+  level      String   @default("info") // info, success, warning, error
+  timestamp  DateTime @default(now())
+}
+
+model Lead {
+  id               String               @id @default(uuid())
+  campaignId       String?
+  campaign         Campaign?            @relation(fields: [campaignId], references: [id])
+  businessName     String
+  category         String?
+  description      String?
+  address          String?
+  city             String?
+  region           String?
+  country          String?              @default("Pakistan")
+  latitude         Float?
+  longitude        Float?
+  website          String?
+  email            String?
+  phone            String?
+  whatsapp         String?
+  normalizedDomain String?
+  normalizedPhone  String?
+  qualityScore     Int                  @default(0)
+  opportunityScore Int                  @default(0)
+  status           String               @default("New") // New, Qualified, Contacted, Interested, Not Interested, Converted, Disqualified, Suppressed
+  assignedTo       String?
+  firstSeenAt      DateTime             @default(now())
+  lastVerifiedAt   DateTime             @default(now())
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  sources          LeadSource[]
+  contacts         LeadContact[]
+  socials          LeadSocial[]
+  technologies     LeadTechnology[]
+  audit            LeadAudit?
+  opportunities    LeadOpportunity[]
+  scoreBreakdown   LeadScoreBreakdown[]
+  notes            LeadNote[]
+  activity         LeadActivity[]
+  listItems        LeadListItem[]
+
+  @@index([city])
+  @@index([category])
+  @@index([status])
+  @@index([opportunityScore])
+  @@index([normalizedDomain])
+  @@index([normalizedPhone])
+}
+
+model LeadSource {
+  id           String   @id @default(uuid())
+  leadId       String
+  lead         Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  sourceName   String
+  sourceType   String   // osm, directory, web, dataset
+  sourceUrl    String
+  confidence   String   @default("Medium") // High, Medium, Low, Unknown
+  discoveredAt DateTime @default(now())
+}
+
+model LeadContact {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  name      String
+  title     String?
+  email     String?
+  phone     String?
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model LeadSocial {
+  id         String   @id @default(uuid())
+  leadId     String
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  platform   String   // Facebook, Instagram, LinkedIn, YouTube, TikTok, Twitter
+  profileUrl String
+  sourceUrl  String?
+  createdAt  DateTime @default(now())
+}
+
+model LeadTechnology {
+  id         String   @id @default(uuid())
+  leadId     String
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  technology String
+  evidence   String
+  confidence String   @default("High") // High, Medium, Low
+  createdAt  DateTime @default(now())
+}
+
+model LeadAudit {
+  id                String   @id @default(uuid())
+  leadId            String   @unique
+  lead              Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  hasHttps          Boolean  @default(false)
+  hasMobileViewport Boolean  @default(false)
+  pageTitle         String?
+  metaDescription   String?
+  hasHeadingH1      Boolean  @default(false)
+  hasCta            Boolean  @default(false)
+  hasServicesPage   Boolean  @default(false)
+  hasContactPage    Boolean  @default(false)
+  hasWhatsapp       Boolean  @default(false)
+  hasSocialLinks    Boolean  @default(false)
+  loadIndicator     String?
+  rawAuditJson      String?  // Complete audit details
+  auditedAt         DateTime @default(now())
+}
+
+model LeadOpportunity {
+  id              String   @id @default(uuid())
+  leadId          String
+  lead            Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  opportunityType String
+  description     String
+  evidence        String
+  confidence      String   @default("Medium") // High, Medium, Low
+  detectedAt      DateTime @default(now())
+}
+
+model LeadScoreBreakdown {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  signal    String
+  points    Int
+  createdAt DateTime @default(now())
+}
+
+model LeadNote {
+  id         String   @id @default(uuid())
+  leadId     String
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  authorName String   @default("Admin")
+  content    String
+  createdAt  DateTime @default(now())
+}
+
+model LeadActivity {
+  id        String   @id @default(uuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  action    String
+  details   String?
+  actorName String   @default("System")
+  createdAt DateTime @default(now())
+}
+
+model LeadList {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+  color       String?        @default("#00E5FF")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  items       LeadListItem[]
+}
+
+model LeadListItem {
+  id        String   @id @default(uuid())
+  listId    String
+  list      LeadList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  addedAt   DateTime @default(now())
+
+  @@unique([listId, leadId])
+}
+
+model Suppression {
+  id        String   @id @default(uuid())
+  type      String   // domain, phone, email, name
+  value     String   @unique
+  reason    String?
+  createdAt DateTime @default(now())
+}
+
+model Export {
+  id        String   @id @default(uuid())
+  filename  String
+  format    String   @default("CSV")
+  rowCount  Int
+  filters   String?  // JSON string of filters applied
+  filePath  String?
+  createdAt DateTime @default(now())
+}
+
+model ProviderUsage {
+  id           String   @id @default(uuid())
+  providerName String
+  operation    String
+  units        Int      @default(1)
+  costUsd      Float    @default(0.0)
+  timestamp    DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  action     String
+  entityType String
+  entityId   String?
+  actor      String   @default("Admin")
+  details    String?
+  createdAt  DateTime @default(now())
+}
